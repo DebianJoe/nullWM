@@ -1,9 +1,10 @@
-/* nullWM is an experiment in extreme minimalism
+/* nullWM is a very simple stacking window manager
  * inspired by tinyWM and written by Joe Brock
  * <DebianJoe@Linuxbbq.org> */
 
-//NOT DONE, DON'T USE YET!!!!
+/*NOT DONE, DON'T USE YET!!!!*/
 #include <X11/Xlib.h>
+#include <X11/keysym.h>
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 int main(void)
@@ -12,10 +13,11 @@ int main(void)
     XWindowAttributes attr;
     XButtonEvent start;
     XEvent ev;
+	unsigned int	modifiers	= ControlMask | Mod1Mask;
 
     if(!(dpy = XOpenDisplay(0x0))) return 1;
 
-    XGrabKey(dpy, XKeysymToKeycode(dpy, XStringToKeysym("F1")), Mod1Mask,
+    XGrabKey(dpy, XKeysymToKeycode(dpy, XStringToKeysym("F1")), modifiers,
             DefaultRootWindow(dpy), True, GrabModeAsync, GrabModeAsync);
     XGrabButton(dpy, 1, Mod1Mask, DefaultRootWindow(dpy), True,
             ButtonPressMask|ButtonReleaseMask|PointerMotionMask, GrabModeAsync, GrabModeAsync, None, None);
