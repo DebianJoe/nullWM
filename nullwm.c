@@ -3,50 +3,93 @@
  * <DebianJoe@Linuxbbq.org> */
 
 /*NOT DONE, DON'T USE YET!!!!*/
-#include <X11/Xlib.h>
+#include <xcb/xcb.h>
 #include <stdio.h>
 #include <stdlib.h>
-#define MAX(a, b) ((a) > (b) ? (a) : (b))
 
-int main(void)
+int main (int argc, char **argv)
 {
-    Display *dpy;
-    XWindowAttributes attr;
-    XButtonEvent start;
-    XEvent ev;
 
-    if(!(dpy = XOpenDisplay(0x0))) return 1;
+    uint32_t values[3];
+    xcb_connection_t *dpy;
+    xcb_screen_t *screen;
+    xcb_drawable_t win;
+    xcb_drawable_t root;
+    xcb_generic_event_t *ev;
+    xcb_get_geometry_reply_t *geom;
 
-    XGrabKey(dpy,XKeysymToKeycode(dpy, XStringToKeysym("F1")), Mod1Mask,
-	     DefaultRootWindow(dpy), True, GrabModeAsync, GrabModeAsync);
-    XGrabKey(dpy,XKeysymToKeycode(dpy, XStringToKeysym("Enter")), Mod1Mask,
-	     DefaultRootWindow(dpy), True, GrabModeAsync, GrabModeAsync);
-    XGrabButton(dpy, 1, Mod1Mask, DefaultRootWindow(dpy), True,
-            ButtonPressMask|ButtonReleaseMask|PointerMotionMask, GrabModeAsync, GrabModeAsync, None, None);
-    XGrabButton(dpy, 3, Mod1Mask, DefaultRootWindow(dpy), True,
-            ButtonPressMask|ButtonReleaseMask|PointerMotionMask, GrabModeAsync, GrabModeAsync, None, None);
+    dpy = xcb_connect(NULL, NULL);
+    if (xcb_connection_has_error(dpy)) return 1;
 
-    start.subwindow = None;
-    for(;;){
-        XNextEvent(dpy, &ev);
-        if(ev.type == KeyPress && ev.xkey.subwindow != None)
-            XRaiseWindow(dpy, ev.xkey.subwindow);
-        else if(ev.type == ButtonPress && ev.xbutton.subwindow != None){
-            XGetWindowAttributes(dpy, ev.xbutton.subwindow, &attr);
-            start = ev.xbutton;
+    screen = xcb_setup_roots_iterator(xcb_get_setup(dpy)).data;
+    root = screen->root;
+
+    xcb_grab_key(dpy, 1, root, XCB_MOD_MASK_2, XCB_NO_SYMBOL,
+                 XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC);
+
+    xcb_grab_button(dpy, 0, root, XCB_EVENT_MASK_BUTTON_PRESS | 
+                XCB_EVENT_MASK_BUTTON_RELEASE, XCB_GRAB_MODE_ASYNC, 
+                XCB_GRAB_MODE_ASYNC, root, XCB_NONE, 1, XCB_MOD_MASK_1);
+
+    xcb_grab_button(dpy, 0, root, XCB_EVENT_MASK_BUTTON_PRESS | 
+                XCB_EVENT_MASK_BUTTON_RELEASE, XCB_GRAB_MODE_ASYNC, 
+                XCB_GRAB_MODE_ASYNC, root, XCB_NONE, 3, XCB_MOD_MASK_1);
+    xcb_flush(dpy);
+
+    for (;;)
+    {
+        ev = xcb_wait_for_event(dpy);
+        switch (ev->response_type & ~0x80) {
+        
+        case XCB_BUTTON_PRESS:
+        {
+            xcb_button_press_event_t *e;
+            e = ( xcb_button_press_event_t *) ev;
+            win = e->child; 
+            values[0] = XCB_STACK_MODE_ABOVE;
+            xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_STACK_MODE, values);
+            geom = xcb_get_geometry_reply(dpy, xcb_get_geometry(dpy, win), NULL);
+            if (1 == e->detail) {
+                values[2] = 1; 
+                xcb_warp_pointer(dpy, XCB_NONE, win, 0, 0, 0, 0, 1, 1);
+            } else {
+                values[2] = 3; 
+                xcb_warp_pointer(dpy, XCB_NONE, win, 0, 0, 0, 0, geom->width, geom->height);
+            }
+            xcb_grab_pointer(dpy, 0, root, XCB_EVENT_MASK_BUTTON_RELEASE
+                    | XCB_EVENT_MASK_BUTTON_MOTION | XCB_EVENT_MASK_POINTER_MOTION_HINT, 
+                    XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC, root, XCB_NONE, XCB_CURRENT_TIME);
+            xcb_flush(dpy);
         }
-        else if(ev.type == MotionNotify && start.subwindow != None){
-            int xdiff = ev.xbutton.x_root - start.x_root;
-            int ydiff = ev.xbutton.y_root - start.y_root;
-            XMoveResizeWindow(dpy, start.subwindow,
-                attr.x + (start.button==1 ? xdiff : 0),
-                attr.y + (start.button==1 ? ydiff : 0),
-                MAX(1, attr.width + (start.button==3 ? xdiff : 0)),
-                MAX(1, attr.height + (start.button==3 ? ydiff : 0)));
+        break;
+
+        case XCB_MOTION_NOTIFY:
+        {
+            xcb_query_pointer_reply_t *pointer;
+            pointer = xcb_query_pointer_reply(dpy, xcb_query_pointer(dpy, root), 0);
+            if (values[2] == 1) {/* move */
+                geom = xcb_get_geometry_reply(dpy, xcb_get_geometry(dpy, win), NULL);
+                values[0] = (pointer->root_x + geom->width > screen->width_in_pixels)?
+                    (screen->width_in_pixels - geom->width):pointer->root_x;
+                values[1] = (pointer->root_y + geom->height > screen->height_in_pixels)?
+                    (screen->height_in_pixels - geom->height):pointer->root_y;
+                xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y, values);
+                xcb_flush(dpy);
+            } else if (values[2] == 3) { /* resize */
+                geom = xcb_get_geometry_reply(dpy, xcb_get_geometry(dpy, win), NULL);
+                values[0] = pointer->root_x - geom->x;
+                values[1] = pointer->root_y - geom->y;
+                xcb_configure_window(dpy, win, XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT, values);
+                xcb_flush(dpy);
+            }
         }
-        else if(ev.type == ButtonRelease){
-            start.subwindow = None;
+        break;
+
+        case XCB_BUTTON_RELEASE:
+            xcb_ungrab_pointer(dpy, XCB_CURRENT_TIME);
+            xcb_flush(dpy); 
+        break;
         }
     }
+return 0;
 }
-
