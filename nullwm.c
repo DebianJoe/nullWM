@@ -8,6 +8,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
+#define _ALT Mod1Mask
+#define _CTRL ControlMask
+#define _SHIFT ShiftMask
 
 int main(void)
 {
@@ -15,13 +18,14 @@ int main(void)
     XWindowAttributes attr;
     XButtonEvent start;
     XEvent ev;
-	unsigned int	modifier	= Mod1Mask;
-	KeyCode enter = XKeysymToKeycode(dpy, XStringToKeysym("Enter"));
+    unsigned int modifier = Mod1Mask | ControlMask | ShiftMask;
 
     if(!(dpy = XOpenDisplay(0x0))) return 1;
 
-    XGrabKey(dpy, XKeysymToKeycode(dpy, XStringToKeysym("F1")), modifier,
+    XGrabKey(dpy, XKeysymToKeycode(dpy, XStringToKeysym("F1")), _ALT,
             DefaultRootWindow(dpy), True, GrabModeAsync, GrabModeAsync);
+    XGrabKey(dpy, XKeysymToKeycode(dpy, XstringToKeysym("F1")), _CTRL, 
+	    DefaultRootWindow(dpy), True, GrabModeAsync, GrabModeAsync);
     XGrabButton(dpy, 1, modifier, DefaultRootWindow(dpy), True,
             ButtonPressMask|ButtonReleaseMask|PointerMotionMask, GrabModeAsync, GrabModeAsync, None, None);
     XGrabButton(dpy, 3, modifier, DefaultRootWindow(dpy), True,
@@ -32,9 +36,9 @@ int main(void)
         XNextEvent(dpy, &ev);
         if(ev.type == KeyPress && ev.xkey.subwindow != None)
             XRaiseWindow(dpy, ev.xkey.subwindow);
-		else if(ev.type == KeyPress && ev.xkey.keycode == enter){
-			system("exec urxvt");
-		}
+        /*else if(ev.type == KeyPress && ev.xkey.keycode == _ALT){
+            system("exec urxvt");
+	    }*/
         else if(ev.type == ButtonPress && ev.xbutton.subwindow != None){
             XGetWindowAttributes(dpy, ev.xbutton.subwindow, &attr);
             start = ev.xbutton;
