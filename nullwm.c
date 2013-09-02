@@ -1,7 +1,6 @@
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <stdlib.h>
-#define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 int main(void)
 {
