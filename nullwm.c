@@ -1,5 +1,6 @@
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
+#include <stdlib.h>
 
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
@@ -12,7 +13,9 @@ int main(void)
 
     if(!(disp = XOpenDisplay(0x0))) return 1;
 
-    XGrabKey(disp, XKeysymToKeycode(disp, XStringToKeysym("F1")), Mod1Mask,
+    XGrabKey(disp, XKeysymToKeycode(disp, XK_Shift_L), Mod1Mask,
+            DefaultRootWindow(disp), True, GrabModeAsync, GrabModeAsync);
+    XGrabKey(disp, XKeysymToKeycode(disp, XK_Return), Mod1Mask,
             DefaultRootWindow(disp), True, GrabModeAsync, GrabModeAsync);
     XGrabButton(disp, 1, Mod1Mask, DefaultRootWindow(disp), True,
             ButtonPressMask|ButtonReleaseMask|PointerMotionMask, GrabModeAsync, GrabModeAsync, None, None);
@@ -26,6 +29,7 @@ int main(void)
         if(ev.type == KeyPress && ev.xkey.subwindow != None)
             XRaiseWindow(disp, ev.xkey.subwindow);
         else if(ev.type == ButtonPress && ev.xbutton.subwindow != None){
+	    XRaiseWindow(disp, ev.xkey.subwindow);
             XGetWindowAttributes(disp, ev.xbutton.subwindow, &attr);
             start = ev.xbutton;
         }
