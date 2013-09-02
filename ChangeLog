@@ -1,0 +1,329 @@
+Version 1.1.0, Sun Jul  3 2011
+
+  * Respect maximise states while resizing
+  * Add basic .desktop file
+  * Add configuration file
+    $HOME/.evilwmrc - options are one per line, omitting leading dash.
+  * Add long alternatives to -g, -v and -s
+    -geometry, -vdesk and -sticky.
+  * Record pre-maximisation dimensions in evilwm-specific window properties
+    _EVILWM_UNMAXIMISED_HORZ and _EVILWM_UNMAXIMISED_VERT.
+  * Extensive EWMH support.  See doc/standards.html for details.
+  * Mostly new Makefile
+  * Clean up terminology: use "fixed" instead of "sticky":  EWMH uses
+    the term "sticky" to mean something different.
+  * Add ability to toggle visible state of docks with Ctrl+Alt+D
+    Usually apps like pagers or launch bars.
+  * Add -dock option to force app to be considered a dock
+  * Snap-to-border and colourmap support no longer optional
+    Though -snap still defaults to 0 (off).
+  * fix: drawing window outline with border_width > 1 [David Flynn]
+    (bottom and right edges wouldn't encompass the border)
+  * build: enable out-of-tree builds [David Flynn]
+  * build: enable ISO c99 [David Flynn]
+  * Fix snapping on multiple screens [Ben Stern]
+  * Window gravity behviour fixes.
+  * Remove warning about strict-aliasing rules [Larry Doolittle]
+
+Version 1.0.1, Wed Mar 11 2009
+
+  * Fix interaction with X and signal handler [Larry Doolittle]
+    This prevented evilwm from shutting down properly with recent
+    versions of X.org.
+
+Version 1.0.0, Mon Jun 18 2007
+
+  * Don't account for width_inc and height_inc when maximising
+  * Ignore borders when snapping maximised client to screen edge
+  * When snapping, prefer screen edge to other windows
+  * Add basic Xrandr support [Yura Semashko]
+
+Version 0.99.25, Wed Apr 26 2006
+
+  * Fix configure requests containing sibling information
+  * Track vdesk separately on each managed screen
+  * Only snap against clients on the same screen
+
+Version 0.99.24, Mon Feb 20 2006
+
+  * Added -nosoliddrag option [Erik Auerswald]
+
+Version 0.99.23, Mon Feb  6 2006
+
+  * Fixed -v option parsing [Robert Blacquiere]
+
+Version 0.99.22, Thu Jan 26 2006
+
+  * EWMH hints added so vdesk/sticky states persist across wm change.
+  * Alt+Tab behaviour modified
+    to be more in line with what most people expect
+  * Added -altmask to override Shift as default control behaviour change key
+  * Added resizing with Ctrl+Alt+Shift+[HJKL]
+
+Version 0.99.21, Mon Jan 16 2006
+
+  * Various documentation fixes [Larry Doolittle]
+  * new.c: nitems_return in get_property() should be unsigned [Larry Doolittle]
+  * screen.c: draw_outline() is only needed if mouse support or no info
+    banner support is compiled in [Larry Doolittle]
+  * ButtonPress notifications shouldn't be needed on root windows: removed.
+  * events.c: Fix positioning error in handle_configure_request().
+
+Version 0.99.20, Fri Jan 13 2006
+
+  * Removed dependency on Motif header files: supply just as much hint
+    structure information as is necessary to interpret Motif hints.
+  * Discard enter events on window move, etc.; simpler than searching
+    through shape extents.
+  * Switch to using a window border for frame's colour, don't touch
+    frame background.  This allows aterm's "fast transparency" to work.
+  * Only map a window when managing it if it's supposed to be visible,
+    instead of mapping then immediately unmapping.
+
+Version 0.99.19, Fri Dec 30 2005
+
+  * Info window movement made a bit more sensible.
+  * Don't remove clients from within error handler, instead flag for
+    removal.
+  * While removing client, only reparent to root if window is withdrawn
+    or window manager is shutting down (fixes xpdf-in-firefox bug).
+  * Window close key with shift held will XKillClient().
+  * Replace logic to decide if we have a shaped window (cribbed from
+    fvwm-2.5.10). [Larry Doolittle]
+  * Warp mouse pointer to a visible point in shaped windows. [Larry Doolittle]
+
+Version 0.99.18, Thu Jun  2 2005
+
+  * Fix Alt+Tab crash when there are no clients.
+  * Added -app option to specify default vdesk (incl sticky), positions
+	and dimensions.
+  * Fix so shape information is applied on WM startup.
+  * Split geometry and vdesk out of -app option into separate -g and -v
+	options (each apply to the last -app defined).
+  * Add -mask1 and -mask2 switches to override default modifier grabs.
+  * Handle applications reparenting a window to root - manage them unless
+	in Withdrawn state.
+  * Set border size to frame size when unmanaging window.
+  * Return to properly implemented interpretation of win_gravity on
+	initial mapping of windows.
+  * Restore window's original border width on WM exit.
+  * Remove deprecated 'vdesk' external pager support.
+  * Stricter warning settings for gcc. [Larry Doolittle]
+  * Cast unused parameters to void. [Larry Doolittle]
+  * Declare opt_term statically for now (intent is to allow arguments
+    to program specified with -term). [Larry Doolittle]
+  * Try to print ssize_t correctly and within strict standards.
+    [Larry Doolittle]
+  * Add $(EXTRA_DEFINES) to Makefile. [Larry Doolittle]
+  * Improve punctuation in comments. [Larry Doolittle]
+  * Use long instead of CARD32 for argument to XChangeProperty() due to
+    odd X Consortium decision. [Larry Doolittle]
+  * Un-shadow variable p in remove_client debugging segment. [Larry Doolittle]
+  * Assign opt_term at compile time instead of malloc. [Larry Doolittle]
+  * Fuss with execvp casting and comments. [Larry Doolittle]
+  * Ignore PPosition during window placement (back to old behaviour of
+    positioning window under pointer unless user-specified).
+
+Version 0.99.17, Wed Oct 15 2003
+
+  * Hopefully *really* fix the "losing control of windows" bug.
+    Testers suggest to me that it is now really gone.
+  * Implement snap-to-border.  [Neil Drumm]
+    Run evilwm with -snap num to enable the behaviour (num specifies
+    the proximity in pixels to snap to - 10 is quite nice).
+    It's worth noting that Per Weijnitz sent a similar patch a while
+    ago, but I never got around to using it :(
+
+Version 0.99.16, Thu Sep 18 2003
+
+  * Fix some Alt+Tab misbehaviour. [Dave Holland]
+  * Fixed "losing control of windows" problem when switching desktops
+    rapidly on slow machines.
+
+Version 0.99.15, Sun Jun 29 2003
+
+  * Warp mouse to topleft before bottomright for small viewport users.
+  * Fix the xpdf problem (started up in tiny window), hopefully doesn't
+    break anything else (XSizeHints manpage suggests width/height hints
+    are obsolete).
+  * Added identifier shadowing changes, and malloc return value checks.
+    [Larry Doolittle]
+
+Version 0.99.14, Wed Jan 15 2003
+
+  * First draft proper multihead support - looks like it's working,
+    needs a bit of testing.
+
+Version 0.99.13, Tue Nov 26 2002
+
+  * Only set focus to PointerRoot on entering root window if we
+    don't have a current window (I'd killed sloppy focus...)
+
+Version 0.99.12, Sun Nov 24 2002
+
+  * Fix a small memory leak (and free another allocation that wouldn't leak).
+  * Make vdesk-changing "autowarp" an option after realising how annoying
+    it was.
+  * Fixed Alt-Tab-into-nowhere bug that I think would cause an infinite
+    loop if you tried Alt-Tab on an empty virtual desktop.
+  * Extended the NumLock keyboard fixes to the mouse button grabs.
+  * Ripped out most of the VDESK_BOTH code (which didn't work) and
+    replaced it with code that just calls the 'vdesk' application (which
+    does).
+  * Fix small problem with border colours in new code.
+  *  Re-fix multihead "support".
+  * Better multihead support - entering managed screen will grab keyboard
+    events, leaving will deselect "current" window.
+  * Documentation updates.
+
+Version 0.99.11, Tue Nov 12 2002
+
+  * Added -DMWM_HINTS (code taken from aewm) as a way of determining
+    if a border is required for a client.
+  * Using -display will also set an environment variable DISPLAY= to
+    be inherited by children.
+  * Hopefully stop the NumLock related bug reports once and for all by
+    figuring out which modifier is attached to XK_Num_Lock and grabbing
+    all keys with that, caps lock and both.  Shifting which modifier
+    Num_Lock is bound to with xmodmap seems to show this working.
+
+Version 0.99.10, Sun Nov 10 2002
+
+  * Add a call to setsid() to put spawned xterms into their own process
+    group.  Should finally stop them disappearing on wm exit.
+  * Fullscreen fixes, tested with xv ('m') and mplayer ('f').
+  * Hopefully fixed the "grey squares" problem by seeing if an XError
+    occurred before we got to set up a new client window.
+    -DINFOBANNER and -DINFOBANNER_MOVERESIZE are now separated so you
+    can enable it for Ctrl+Alt+I but disable it for move/resize where
+    it would slow everything down.
+  * When a window is removed, don't reset current window unless this
+    *was* the current window.  This means all background windows should
+    grey out properly now.
+
+Version 0.99.9, Thu Nov  7 2002
+
+  * Fix potential divide-by-zero for clients that misreport their
+    geometry divisors.
+
+Version 0.99.8, Thu Oct 17 2002
+
+  * Adjust position of *new* windows trying to fullscreen. [Dave Holland]
+  * Applied kludge that fixes the IE bug.  [David Flynn]
+    IE is basically doing some *REALLY BAD THINGS*, and neither of us
+    know why, but David traced it down to generating a single specific
+    xerror which we can happily ignore.
+  * Manpage updates.
+  * When removing a window, map it before destroying its parent (the
+    border).  This should stop things disappearing if you quit evilwm
+    while using virtual desktops (thanks to Paul Whittaker).
+  * Changed default font to 'variable' which should exist even if
+    'lucidasans-10' doesn't (thanks to Paul Whittaker and Dan Field).
+  * Fix non-soliddrags (broken since 2002-03-26 edit, it seems).
+  * Add a new window information banner (displayed while moving, resizing
+    or holding down Ctrl+Alt+I).  Enabled with -DINFOBANNER.
+
+Version 0.99.7, Mon Aug 19 2002
+
+  * A window that changes size to be >= width/height of screen with
+    x=0 or y=0 is probably trying to fullscreen, so shift it left/up
+    by border width in those cases.
+  * Fixed makefile so it works with BSD make.
+  * Made move/resize raise the window before doing anything.
+  * Changed way spawn() works - it now fork()s twice.
+  * Wait until pointer has moved at least 6 pixels before starting to
+    move a window - hopefully will mostly eliminate my nicely aligned
+    windows becoming slightly crooked just because I raised one.
+
+Version 0.99.4, Thu Feb 28 2002
+
+  * Added -V option.
+  * Start the run up to 1.0.  Hopefully this will involve solving the
+    IE bug, but right now I'm not very concerned about it.
+  * Grab everything with Mod3Mask as well - this should circumvent the
+    NumLock problem.
+  * If an app maps itself (EVIL!  EVIL!  EVIL!), switch to the virtual
+    desktop it's on before raising it.
+  * Added support for vdesk - an external virtual desktop manager
+    that works by iconifying windows and mapping them back again.
+    [vatten@users.sourceforge.net]
+  * Added support for the combination of vdesk and the internal
+    virtual desktop manager. [vatten@users.sourceforge.net]
+  * Move all the key bindings out into a separate include file and
+    add a line in Makefile to override KILL key (for Cygwin).
+
+Version 0.3.11, Sat Jun  2 2001
+
+  * Implement Ctrl+Alt+[Left|Right] vdesk switching. [Peter Bailey]
+    Opinion around the office is that this is a Good
+    Thing, but not to let it cycle around (e.g., from vdesk 8 to vdesk 1).
+    So that's what I've put in.  Unfortunately reintroduces dependency
+    on XK_1-XK_8 being contiguous.
+  * Fix the ordering problem with virtual desktops. [Dave Holland]
+    Works well, but I think an extra parameter to unhide() is tidier,
+    so I've done that instead.  Much thanks anyway :)
+  * Did some research into Wayne Myers' inane crash.  Another spurious
+    XError.  By simply setting up to ignore the XError, I've "fixed" the
+    bug.  Strange.  Tempted to blame GTK+ for now.
+  * Changed default Makefile to build virtual desktops in, as that's
+    what seems to break most frequently; and enable solid drags, as
+    that's what I use.
+
+Version 0.3.10, Sun Feb 18 2001
+
+  * Added maximise/vertical maximise.
+  * Made mouse control optional(!)
+  * Found the bug that was indirectly causing infinite loops with virtual
+    desktops enabled.  XNextEvent raising an X error - hmm, doesn't say
+    that could happen in the docs.  I don't like the current fix, which is
+    flag handle_xerror to ignore during that call.
+  * Ah.  After switching desktops, unmapping one window could cause an
+    enter event for another.  By the time the handler is called, that
+    window is also unmapped, so anything you try and do to handle the
+    event causes the xerror.  Sorted :)
+
+Version 0.3.9, Sat Feb 10 2001
+
+  * Fixed unfocused Alt+Tab again.
+  * Colourmap handling optional, only needed for non-truecolour displays.
+
+Version 0.3.8, Sun Feb  4 2001
+
+  * -DSOLIDDRAG now enables..  er..  solid drags.  Which look nice but
+    wouldn't be splendid on a slow machine.
+  * -DSTDIO is needed to include various error/help messages.  Basically
+    I looked at swm and saw one of its methods of shaving bytes.
+    INSTALL file provided to explain all the -Ds.
+  * If a window tries to start itself iconised, map it.  That way we
+    shouldn't get some weirdnesses (tho it might be rude).
+  * With minimal options, evilwm now comes out to <15K under Linux :)
+
+Version 0.3.7, Mon Jan 15 2001
+  * -bw option to change border width.
+  * Also changed all other options to single - due to making more sense
+  * Stop remembering the name of the window.
+  * Fixed that daft "last window's gone, can't do anything" bug
+  * Realised we don't care if window is transient - nothing happens anyway.
+  * Use some simple fork/exec code instead of system()
+    ... but managed to save space elsewhere just by altering the logic
+  * Merged the virtual window manager hack in - edit Makefile to include
+    -DVWM to use.  It should be noted that at the moment for any
+    "official" packages, I'd prefer this was left out...
+
+Version 0.3.5, Tue Nov  7 2000
+
+  * Looked into the gravity code and made it more right.
+  * Divide XxY display by increments if bit set whilst resizing/moving.
+
+Version 0.3.4, Tue Oct 31 2000
+
+  * Updated aewm license info by request.
+  * XK_Insert does same as XK_KP_Insert - may have to rethink that as
+    it's a 4-key chord on a happy hacking.  Almost as bad as emacs!
+  * Alt+Tab warps account for border width
+  * Now gets the border the right size when a window resizes itself.
+  * First window gets an active border now.
+
+Version 0.3.3
+
+  * No logs back this far.

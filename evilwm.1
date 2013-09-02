@@ -1,0 +1,204 @@
+.TH evilwm 1 "October 13, 2010" "" ""
+.SH NAME
+evilwm \- Minimalist Window Manager for X
+.SH SYNOPSIS
+\fBevilwm\fP
+[ \fB\-display\fP \fIdisplay\fP ]
+[ \fB\-term\fP \fItermprog\fP ]
+[ \fB\-fn\fP \fIfontname\fP ]
+[ \fB\-fg\fP \fIforeground-colour\fP ]
+[ \fB\-fc\fP \fIfixed-colour\fP ]
+[ \fB\-bg\fP \fIbackground-colour\fP ]
+[ \fB\-bw\fP \fIborderwidth\fP ]
+[ \fB\-snap\fP \fInum\fP ]
+[ \fB\-mask1\fP \fImodifiers\fP ]
+[ \fB\-mask2\fP \fImodifiers\fP ]
+[ \fB\-altmask\fP \fImodifier\fP ]
+[ [ \fB\-app\fP \fIname/class\fP ]
+[ \fB\-geometry\fP \fIgeometry\fP ]
+[ \fB\-dock\fP ]
+[ \fB\-vdesk\fP \fIvdesk\fP ]
+[ \fB\-fixed\fP ] ]...
+[ \fB\-nosoliddrag\fP ]
+[ \fB\-key.kill\fP \fIkey\fP ]
+[ \fB\-V\fP ]
+.SH DESCRIPTION
+.B evilwm
+is a minimalist window manager based on aewm, extended to feature
+many keyboard controls, and otherwise altered to be more friendly.
+.PP
+In
+.BR evilwm ,
+the focus follows the mouse pointer, and focus is not lost if
+you stray onto the root window.  The current window border is shaded
+gold, with other windows left as a dark grey.
+.PP
+You can use the mouse to manipulate windows either by click/dragging
+the 1 pixel border, or by holding down Alt and doing so anywhere in the
+client window. The controls are:
+.TP
+Button 1
+Move window.
+.TP
+Button 2
+Resize window.
+.TP
+Button 3
+Lower window.
+.PP
+Most keyboard controls are used by holding down Control and Alt, then
+pressing a key. Available functions are:
+.TP
+Return
+Spawn new terminal.
+.TP
+Escape
+Delete current window.  Hold Shift as well to force kill a client.
+.TP
+Insert
+Lower current window.
+.TP
+H, J, K, L
+Move window left, down, up or right (16 pixels).  Holding Shift resizes the
+window instead.
+.TP
+Y, U, B, N
+Move window to top-left, top-right, bottom-left or
+bottom-right of screen.
+.TP
+I
+Show information about current window.
+.TP
+Equals
+Maximise current window vertically (toggle). Holding Shift toggles horizontal
+maximization.
+.TP
+X
+Maximise current window (toggle).
+.TP
+D
+Toggle visible state of docks (e.g., pagers and launch bars).
+.PP
+If compiled with virtual desktop support, these functions are also available:
+.TP
+F
+Fix or unfix current window.
+.TP
+1--8
+Switch virtual desktop.
+.TP
+Left
+Previous virtual desktop.
+.TP
+Right
+Next virtual desktop.
+.TP
+A
+Switch to the most recently unmapped virtual desktop.
+.TP
+S
+[dual-head xinerama only] Exchange(swap) the currently visible virtual desktops.
+.PP
+In addition to the above, Alt+Tab can be used to cycle through windows
+on screen.
+.PP
+To make
+.B evilwm
+exit, you have to kill the process.
+.SH OPTIONS
+.TP
+\-display \fIdisplay\fP
+specifies the X display to run on.
+.TP
+\-term \fItermprog\fP
+specifies an alternative program to run when spawning a new terminal (defaults
+to xterm, or x\-terminal\-emulator in Debian).  Separate arguments with
+whitespace, and escape needed whitespace with a backslash.  Remember that
+special characters will also need to be protected from the shell.
+.TP
+\-fn \fIfontname\fP
+specify a font to use when resizing or displaying window titles.
+.TP
+\-fg \fIforeground-colour\fP
+frame colour of currently active window.
+.TP
+\-fc \fIfixed-colour\fP
+frame colour of active fixed windows.
+.TP
+\-bg \fIbackground-colour\fP
+frame colour of inactive windows.
+.TP
+\-bw \fIborderwidth\fP
+width of window borders in pixels.
+.TP
+\-snap \fInum\fP
+enable snap-to-border support.  num gives the proximity in pixels to snap to.
+.TP
+\-numvdesks \fInum\fP
+number of virtual desktops to provide.
+.TP
+\-mask1 \fImodifiers\fP, \-mask2 \fImodifiers\fP, \-altmask \fImodifier\fP
+override the default keyboard modifiers used to grab keys for window manager
+functionality.
+\fImask1\fP is used for most keyboard controls (default: control+alt),
+and \fImask2\fP is used for mouse button controls and cycling windows
+(default: alt).
+\fIaltmask\fP is used to modify the behaviour of certain controls
+(default: shift).
+Modifiers may be separated with + signs.
+Valid modifiers are shift, lock, control, alt, mod1, mod2, mod3, mod4,
+mod5.
+.TP
+\-app \fIname/class\fP
+match an application by instance name and class (for help in finding
+these, use the \fBxprop\fP tool to extract the \fIWM_CLASS\fP property).
+Subsequent \fI\-geometry\fP, \fI\-dock\fP, \fI\-vdesk\fP and \fI\-fixed\fP
+options will apply to this match.
+.TP
+\-g, -geometry \fIgeometry\fP
+apply a geometry (using a standard X geometry string) to applications matching
+the last
+.I \-app.
+.TP
+\-dock
+specify that application should be considered to be a dock, even if it lacks
+the appropriate property.
+.TP
+\-v, -vdesk \fIvdesk\fP
+specify a default virtual desktop for applications matching the last
+.I \-app.
+Note that desktops are numbered from 0.
+.TP
+\-f, -fixed
+specify that application is to start with a fixed client window (\fI\-s\fP is
+also accepted to be compatible with previous versions).
+.TP
+\-nosoliddrag
+draw a window outline while moving or resizing.
+.TP
+\-key.kill \fIkey\fP
+use \fIkey\fP as the keybinding for killing a client, overriding the
+default binding.
+.TP
+\-V
+print version number.
+.PP
+.B evilwm
+will also read options, one per line, from a file called \fI.evilwmrc\fP
+in the user's home directory.
+Options listed in a configuration file should omit the leading dash.
+Options specified on the command line override those found in the
+configuration file.
+.SH FILES
+.I $HOME/.evilwmrc
+.SH BUGS
+The author's idea of friendly may differ to that of many other people.
+.SH AUTHOR
+Ciaran Anscomb <evilwm@6809.org.uk>.
+.br
+aewm was written by Decklin Foster <fosterd@hartwick.edu>.
+.br
+9wm was written by David Hogan <dhog@cs.su.oz.au>.
+.SH "SEE ALSO"
+.BR xterm (1),
+.BR xprop (1)
