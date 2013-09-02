@@ -13,9 +13,7 @@ int main(void)
 
     if(!(disp = XOpenDisplay(0x0))) return 1;
 
-    XGrabKey(disp, XKeysymToKeycode(disp, XK_Shift_L), Mod1Mask,
-            DefaultRootWindow(disp), True, GrabModeAsync, GrabModeAsync);
-    XGrabKey(disp, XKeysymToKeycode(disp, XK_Return), Mod1Mask,
+    XGrabKey(disp, XKeysymToKeycode(disp, XK_F11), Mod1Mask,
             DefaultRootWindow(disp), True, GrabModeAsync, GrabModeAsync);
     XGrabButton(disp, 1, Mod1Mask, DefaultRootWindow(disp), True,
             ButtonPressMask|ButtonReleaseMask|PointerMotionMask, GrabModeAsync, GrabModeAsync, None, None);
@@ -26,8 +24,8 @@ int main(void)
     for(;;)
     {
         XNextEvent(disp, &ev);
-        if(ev.type == KeyPress && ev.xkey.subwindow != None)
-            XRaiseWindow(disp, ev.xkey.subwindow);
+        if(ev.type == KeyPress &&(XLookupKeysym(&ev.xkey, 0) == XK_F11))
+		system("exec xterm");
         else if(ev.type == ButtonPress && ev.xbutton.subwindow != None){
 	    XRaiseWindow(disp, ev.xkey.subwindow);
             XGetWindowAttributes(disp, ev.xbutton.subwindow, &attr);
