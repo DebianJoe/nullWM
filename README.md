@@ -21,6 +21,11 @@ Why did you do this?
 ========
 This was for a short time a stackingWM with silly keybinds and all that, but then I remembered that I hate Xlib programming.  So, this is what I decided on.
 
+How to Install.
+========
+For a standard install, cd to the directory of the source files and "make" and then with root permissions, "make install".  If you're running LinuxBBQ Sauce, instead of make, use "make sauce".
+
+
 License
 ========
 Copyright 2013 by Joe Brock <DebianJoe@linuxbbq.org>  
