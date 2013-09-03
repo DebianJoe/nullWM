@@ -23,7 +23,11 @@ This was for a short time a stackingWM with silly keybinds and all that, but the
 
 How to Install.
 ========
-For a standard install, cd to the directory of the source files and "make" and then with root permissions, "make install".  If you're running LinuxBBQ Sauce, instead of make, use "make sauce".
+For a standard install, cd to the directory of the source files and "make" and then with root permissions, "make install".  If you're running LinuxBBQ Sauce, instead of make, use "make sauce".  I guess you could always use "make clean" too, if you hate bloat as much as I do.
+
+Minor Issues?
+========
+Of course there are minor issues.  It's as minimalistic as a WM can get and still do something.  Also, if using the "Sauce64" version, urxvt geometry needs to be set in the code before you compile it.  Just find something that works for your display and hack it in there.  If you can't figure it out, then e-mail me.  After I make fun of you for a little while, I'll walk you through it.
 
 
 License
