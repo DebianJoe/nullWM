@@ -1,6 +1,18 @@
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <stdlib.h>
+#include <unistd.h>
+
+static const char *term[] = { "x-terminal-emulator", "-geometry", "169x54", "-e", "tmux", NULL };
+static const char *emacs[] = { "emacs23", "-mm", NULL };
+
+void spawn(Display * disp, const char** com)
+{
+    if (fork()) return;
+    if (disp) close(ConnectionNumber(disp));
+    setsid();
+    execvp((char*)com[0], (char**)com);
+}
 
 int main(void)
 {
@@ -15,8 +27,8 @@ int main(void)
     for(;;){
         XNextEvent(disp, &ev);
         if(ev.type == KeyPress &&(XLookupKeysym(&ev.xkey, 0) == XK_F11))
-		system("exec x-terminal-emulator -geometry 169x54 -e tmux");
+            spawn(disp, term);
         if(ev.type == KeyPress &&(XLookupKeysym(&ev.xkey, 0) == XK_F10))
-		system("exec emacs23 -mm");
+            spawn(disp, emacs);
     }
 }
