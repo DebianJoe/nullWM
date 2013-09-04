@@ -1,10 +1,9 @@
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
-#include <stdlib.h>
 #include <unistd.h>
 
 static const char *term[] = { "x-terminal-emulator", "-geometry", "169x54", "-e", "tmux", NULL };
-static const char *emacs[] = { "emacs23", "-mm", NULL };
+static const char *emacs[] = { "emacs24", "-mm", NULL };
 
 void spawn(Display * disp, const char** com)
 {
