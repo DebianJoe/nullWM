@@ -10,7 +10,7 @@ Still, it's all of 20 sloc of beautifully constructed C, and relies only on X11 
 
 Then What DOES it do?
 ======
-It opens an Xterm.  
+It opens a full-screen Xterm.    
 
 If you use the "make sauce" option, it opens URXVT with F11, and Emacs with F10.
 
