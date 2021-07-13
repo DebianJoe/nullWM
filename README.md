@@ -4,7 +4,7 @@ The anti-X11, X11 window manager.
 
 Nullwm is simple.  It has exactly 1 function.  Alt+F11 opens a Full-screen Xterm.  There is a secondary build that opens either urxvt(Alt+F11) or emacs(Alt+F10).  I might add an option to kill the wm later if I feel like it.
 
-That's it.  That's all it does.  You can't move windows, or minimize, or change desktops, or tile without a multiplexer, or....whatever other crap you'd normally do with X-based window managers.  It won't get along with your pagers, or any thing like that.
+That's it.  That's all it does.  You can't move windows, or minimize, or change desktops, or tile without a multiplexer, or....whatever other junk you'd normally do with X-based window managers.  It won't get along with your pagers, or any thing like that.
 
 Still, it's all of 20 sloc of beautifully constructed C, and relies only on X11 headers.  It might be the smallest WM ever written for X.
 
